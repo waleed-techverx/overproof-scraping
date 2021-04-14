@@ -1,0 +1,26 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+  <div class="container">
+    <div class="row">
+      <!-- HTML response view -->
+      <div class="col-8">
+        <div class="form-group">
+          <h2>HTML Content</h2>
+          <textarea class="form-control mt-2" id="htmlResponse" rows="32">{{ content }}</textarea>
+        </div>
+      </div>
+
+      <!-- Extract data view -->
+      <div class="col-12">
+        <div class="form-group">
+          <h2>Resulted JSON</h2>
+          <textarea class="form-control mt-2" id="htmlResponse2" rows="32">{{output}}</textarea>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  
+  
+{% endblock %}

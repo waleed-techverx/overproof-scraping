@@ -15,6 +15,7 @@ from flask import url_for
 import requests
 from bs4 import BeautifulSoup
 import json
+import helper
 
 ######################################################
 # 
@@ -31,80 +32,90 @@ app = Flask(__name__)
 #
 ######################################################
 
-@app.route('/')
-def home():
-    return render_template('home.html')
+@app.route('/basic')
+def basic():
+    return render_template('basic.html')
+
+@app.route('/intermediate')
+def intermediate():
+    return render_template('intermediate.html')
+
+@app.route('/advance')
+def advance():
+    return render_template('advance.html')
+
+@app.route('/expert')
+def expert():
+    return render_template('expert.html')
 
 
-@app.route('/scrape')
-def scrape():
+@app.route('/basicscrape')
+def basicscrape():
     # flash(request.args.get('url'), 'success')
     url = request.args.get('url')
 
     try:
         # response = requests.get(url) // uncomment
-        response = requests.get(
-            'https://www.ubereats.com/miami/food-delivery/finka-table-%26-tap/hYHqDrZVRYucwE35gn3jAA?pl=JTdCJTIyYWRkcmVzcyUyMiUzQSUyMk1pYW1pJTIwSW50ZXJuYXRpb25hbCUyMEFpcnBvcnQlMjIlMkMlMjJyZWZlcmVuY2UlMjIlM0ElMjJDaElKd1VxNVRrMjMyWWdSNGZpaXktRGFuNWclMjIlMkMlMjJyZWZlcmVuY2VUeXBlJTIyJTNBJTIyZ29vZ2xlX3BsYWNlcyUyMiUyQyUyMmxhdGl0dWRlJTIyJTNBMjUuNzk1MzUyNSUyQyUyMmxvbmdpdHVkZSUyMiUzQS04MC4yNzg2NzY4JTdE')
+        response = requests.get(url)
         content = BeautifulSoup(response.content, 'html.parser')
         resturantName = content.prettify()
 
-        # // Logic
-        def json_praser(htmlContent):
-            itemsArray = []
-            rawData = {}
-
-            # Rest Name
-            resturantName = htmlContent.find('h1', class_='ec ed g7').text
-            rawData["name"] = resturantName
-
-            #  Categroy
-            allCategories = htmlContent.findAll('li', class_='h5')
-
-            for itemIndex, items in enumerate(allCategories):
-
-                category = items.find('h2', class_='h6 h7 ce ea').text
-                item = items.findAll('li', class_='he hf hg ag')
-
-                for unitIndex, unit in enumerate(item):
-                    itemDetails = []
-                    itemName = itemDesc = itemPrice = ''
-                    if (unit.find('div', class_='hm hn ho al')):
-                        itemName = unit.find('div', class_='hm hn ho al').text
-                    if (unit.find('div', class_='cc dw cr ct')):
-                        itemDesc = unit.find('div', class_='cc dw cr ct').text
-                    if (unit.find('div', class_='cw cq cr ag')):
-                        itemPrice = unit.find('div', class_='cw cq cr ag').text
-
-                    slug = "".join(itemName.lower().split())
-
-                    if (len(itemsArray) > 0):
-                        check = False
-                        for index, element in enumerate(itemsArray):
-                            for ele in element:
-                                if (ele == slug):
-                                    check = True
-                                    itemDetails = []
-                                    itemsArray[index][slug]["category"].append(category)
-                                    break
-                                else:
-                                    check = False
-                            if (check):
-                                break
-                        if (not check):
-                            itemDetails = {slug: {"name": itemName, "desc": itemDesc, "price": itemPrice, "category": [category]}}
-                    else:
-                        itemDetails = {slug: {"name": itemName, "desc": itemDesc, "price": itemPrice, "category": [category]}}
-                    
-                    itemsArray.append(itemDetails)
-
-            rawData['items'] = itemsArray
-            return json.dumps(rawData)
-
-        output = json_praser(content)
+        output = helper.basic_content(content)
     except:
         flash('Failed to retrieve URL "%s"' % url, 'danger')
 
-    return render_template('scrape.html', content=resturantName, output=output)
+    return render_template('basicscrape.html', content=resturantName, output=output)
+
+@app.route('/intermediatescrape')
+def intermediatescrape():
+    # flash(request.args.get('url'), 'success')
+    url = request.args.get('url')
+
+    try:
+        # response = requests.get(url) // uncomment
+        response = requests.get(url)
+        content = BeautifulSoup(response.content, 'html.parser')
+        resturantName = content.prettify()
+
+        output = helper.intermediate_content(content)
+    except:
+        flash('Failed to retrieve URL "%s"' % url, 'danger')
+
+    return render_template('intermediatescrape.html', content=resturantName, output=output)
+
+@app.route('/advancescrape')
+def advancescrape():
+    # flash(request.args.get('url'), 'success')
+    url = request.args.get('url')
+
+    try:
+        # response = requests.get(url) // uncomment
+        response = requests.get(url)
+        content = BeautifulSoup(response.content, 'html.parser')
+        resturantName = content.prettify()
+
+        output = helper.advance_content(content)
+    except:
+        flash('Failed to retrieve URL "%s"' % url, 'danger')
+
+    return render_template('advancescrape.html', content=resturantName, output=output)
+
+@app.route('/expertscrape')
+def expertscrape():
+    # flash(request.args.get('url'), 'success')
+    url = request.args.get('url')
+
+    try:
+        # response = requests.get(url) // uncomment
+        response = requests.get(url)
+        content = BeautifulSoup(response.content, 'html.parser')
+        resturantName = content.prettify()
+
+        output = helper.expert_content(content)
+    except:
+        flash('Failed to retrieve URL "%s"' % url, 'danger')
+
+    return render_template('expertscrape.html', content=resturantName, output=output)
 
 
 # render results to screen
