@@ -3,7 +3,6 @@ import json
 def basic_content(htmlContent):
     itemsArray = []
     rawData = {}
-
     # Rest Name
     resturantName = htmlContent.find('h1', class_='ec ed f6').text
     rawData["name"] = resturantName
@@ -55,25 +54,23 @@ def basic_content(htmlContent):
 def intermediate_content(htmlContent):
     itemsArray = []
     rawData = {}
-
     # Rest Name
-    resturantName = htmlContent.find('h1', class_='ec ed f6').text
+    resturantName = htmlContent.find('h1', class_='ec ed g7').text
     rawData["name"] = resturantName
 
     #  Categroy
-    allCategories = htmlContent.findAll('li', class_='gb')
+    allCategories = htmlContent.findAll('li', class_='h5')
 
     for itemIndex, items in enumerate(allCategories):
 
-        category = items.find('h2', class_='gc gd ce ea').text
-        item = items.findAll('li', class_='gk gl gm ag')
-        print(item)
+        category = items.find('h2', class_='h6 h7 ce ea').text
+        item = items.findAll('li', class_='he hf hg ag')
 
         for unitIndex, unit in enumerate(item):
             itemDetails = []
             itemName = itemDesc = itemPrice = ''
-            if (unit.find('div', class_='gs gt gu al')):
-                itemName = unit.find('div', class_='gs gt gu al').text
+            if (unit.find('div', class_='hm hn ho al')):
+                itemName = unit.find('div', class_='hm hn ho al').text
             if (unit.find('div', class_='cc dw cr ct')):
                 itemDesc = unit.find('div', class_='cc dw cr ct').text
             if (unit.find('div', class_='cw cq cr ag')):

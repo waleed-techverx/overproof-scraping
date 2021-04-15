@@ -64,6 +64,7 @@ def basicscrape():
     except:
         flash('Failed to retrieve URL "%s"' % url, 'danger')
 
+
     return render_template('basicscrape.html', content=resturantName, output=output)
 
 @app.route('/intermediatescrape')
@@ -75,13 +76,13 @@ def intermediatescrape():
         # response = requests.get(url) // uncomment
         response = requests.get(url)
         content = BeautifulSoup(response.content, 'html.parser')
-        resturantName = content.prettify()
+        html_content = content.prettify()
 
         output = helper.intermediate_content(content)
     except:
         flash('Failed to retrieve URL "%s"' % url, 'danger')
 
-    return render_template('intermediatescrape.html', content=resturantName, output=output)
+    return render_template('intermediatescrape.html', content=html_content, output=output)
 
 @app.route('/advancescrape')
 def advancescrape():
@@ -109,13 +110,13 @@ def expertscrape():
         # response = requests.get(url) // uncomment
         response = requests.get(url)
         content = BeautifulSoup(response.content, 'html.parser')
-        resturantName = content.prettify()
+        html_content = content.prettify()
 
         output = helper.expert_content(content)
     except:
         flash('Failed to retrieve URL "%s"' % url, 'danger')
 
-    return render_template('expertscrape.html', content=resturantName, output=output)
+    return render_template('expertscrape.html', content=html_content, output=output)
 
 
 # render results to screen
